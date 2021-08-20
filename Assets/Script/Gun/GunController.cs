@@ -5,28 +5,43 @@ using UnityEngine;
 public class GunController : MonoBehaviour
 {
     [SerializeField] private Transform gunHold;
-    [SerializeField] private Gun startingGun;
+    [SerializeField] private GunScriptableObject startingGun;
 
     private Gun equipedGun;
+    private Transform gunGFX;
+
 
     
     void Start()
     {
-
         EquipGun(startingGun);
     }
 
 
-    private void EquipGun(Gun _gun)
+    private void EquipGun(GunScriptableObject _gunConfig)
     {
         if(equipedGun != null)
         {
             Destroy(equipedGun.gameObject);
         }
 
-        equipedGun = Instantiate(_gun, gunHold);
-        equipedGun.transform.parent = gunHold;
+        Gun gun = gameObject.AddComponent<Gun>();
+        gun.SetGunConfig(_gunConfig);
 
+        equipedGun = gun;
+        
+        gunGFX = Instantiate(_gunConfig.GunGFX, gunHold);
+        gunGFX.parent = gunHold;
+        
+    }
+
+
+    private void Update()
+    {
+        if (Input.GetButtonDown("Fire1"))
+        {
+            equipedGun.Shoot(gunGFX);
+        }
     }
 
 }

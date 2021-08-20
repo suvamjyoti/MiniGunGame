@@ -4,13 +4,20 @@ using UnityEngine;
 
 public class Gun : MonoBehaviour
 {
-    void Start()
+    private GunScriptableObject m_gunConfig;
+
+    public void SetGunConfig(GunScriptableObject _gunConfig)
     {
-        
+        m_gunConfig = _gunConfig;
     }
 
-    void Update()
+
+    public void Shoot(Transform parent)
     {
-        
+        Transform obj = Instantiate(m_gunConfig.bullet.GetComponent<Transform>(), parent);
+        Projectile bullet = obj.GetComponent<Projectile>();
+        bullet.newSpeed(m_gunConfig.muzzelVelocity);
     }
+
+
 }
