@@ -16,7 +16,7 @@ MonoBehaviour:
   GunGFX: {fileID: 4208444145112640964, guid: 8f53d05dfa3a4ac45a4ff8b2a82ef38f, type: 3}
   bullet: {fileID: 8214526273785288076, guid: db7893ebc1a86494983dbb96a0d995a9, type: 3}
   muzzelVelocity: 70
-  fireRatePerMinute: 60
+  fireRatePerMinute: 600
   bulletPerMagzine: 30
   damage: 36
   range: 40

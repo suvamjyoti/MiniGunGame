@@ -10,8 +10,15 @@ public class GunController : MonoBehaviour
     private Gun equipedGun;
     private Transform gunGFX;
 
+    [SerializeField] private float m_fireRate;
+    private float currentTime = 0;
 
-    
+
+    private bool _isBursting = false;
+    private int noOfBurstRound = 3;
+
+    [SerializeField]private ShootType m_shootType;
+
     void Start()
     {
         EquipGun(startingGun);
@@ -28,6 +35,7 @@ public class GunController : MonoBehaviour
         Gun gun = gameObject.AddComponent<Gun>();
         gun.SetGunConfig(_gunConfig);
 
+        m_fireRate = 60f/(float)_gunConfig.fireRatePerMinute;
         equipedGun = gun;
         
         gunGFX = Instantiate(_gunConfig.GunGFX, gunHold);
@@ -35,13 +43,71 @@ public class GunController : MonoBehaviour
         
     }
 
-
+    
     private void Update()
     {
-        if (Input.GetButtonDown("Fire1"))
+        if (canShoot())
         {
-            equipedGun.Shoot(gunGFX);
+            Shoot();
         }
+        else
+        {
+            currentTime += Time.deltaTime;
+        }
+    }
+
+
+
+    private bool canShoot()
+    {
+        return (currentTime > m_fireRate && _isBursting == false) ;
+    }
+
+    private void Shoot()
+    {
+        switch (m_shootType)
+        {
+            case ShootType.Auto:
+                if (Input.GetButton("Fire1"))
+                {
+                    currentTime = 0;
+                    equipedGun.Shoot(gunGFX);
+                }
+                break;
+
+            case ShootType.Semi:
+                if (Input.GetButtonDown("Fire1"))
+                {
+                    currentTime = 0;
+                    equipedGun.Shoot(gunGFX);
+                }
+               
+                break;
+            case ShootType.Burst:
+                if (Input.GetButton("Fire1"))
+                {
+                    currentTime = 0;
+                    StartCoroutine(burstFire());
+                }
+                break;
+        }
+    }
+    
+
+    private IEnumerator burstFire()
+    {
+        _isBursting = true;
+        int i = 0;
+        while (i< noOfBurstRound)
+        {
+            yield return new WaitForSeconds(m_fireRate);
+            equipedGun.Shoot(gunGFX);
+            i++;
+        }
+
+        yield return new WaitForSeconds(0.5f);
+
+        _isBursting = false;
     }
 
 }

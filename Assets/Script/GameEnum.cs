@@ -6,3 +6,10 @@ public enum GunType
     MP5,
     Dragunov
 }
+
+public enum ShootType
+{
+    Auto,
+    Semi,
+    Burst
+}
